@@ -23,14 +23,25 @@ class WarkopApp extends ConsumerStatefulWidget {
 }
 
 class _WarkopAppState extends ConsumerState<WarkopApp> {
-  bool _ready = false;
+  int _boot = 0;
+  String? _seedError;
 
   @override
   void initState() {
     super.initState();
-    seedAwal(ref.read(dbProvider)).then((_) {
-      if (mounted) setState(() => _ready = true);
-    });
+    // UI langsung tampil; seed jalan di background dan tidak pernah
+    // menahan splash. Kalau seed gagal, error ditampilkan, bukan macet.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _bootDb());
+  }
+
+  Future<void> _bootDb() async {
+    try {
+      await seedAwal(ref.read(dbProvider))
+          .timeout(const Duration(seconds: 20));
+    } catch (e) {
+      _seedError = '$e';
+    }
+    if (mounted) setState(() => _boot++);
   }
 
   @override
@@ -41,16 +52,15 @@ class _WarkopAppState extends ConsumerState<WarkopApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6F4E1F)),
         useMaterial3: true,
       ),
-      home: _ready
-          ? const HomeNav()
-          : const Scaffold(
-              body: Center(child: CircularProgressIndicator())),
+      // Key berubah setelah seed selesai -> layar query ulang, menu muncul.
+      home: HomeNav(key: ValueKey(_boot), seedError: _seedError),
     );
   }
 }
 
 class HomeNav extends StatefulWidget {
-  const HomeNav({super.key});
+  final String? seedError;
+  const HomeNav({super.key, this.seedError});
   @override
   State<HomeNav> createState() => _HomeNavState();
 }
@@ -106,9 +116,20 @@ class _HomeNavState extends State<HomeNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _i,
-        children: [for (var k = 0; k < _labels.length; k++) _page(k)],
+      body: Column(
+        children: [
+          if (widget.seedError != null)
+            MaterialBanner(
+              content: Text('DB gagal disiapkan: ${widget.seedError}'),
+              actions: [TextButton(onPressed: () {}, child: const Text('OK'))],
+            ),
+          Expanded(
+            child: IndexedStack(
+              index: _i,
+              children: [for (var k = 0; k < _labels.length; k++) _page(k)],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _i,
