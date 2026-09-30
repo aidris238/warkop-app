@@ -114,7 +114,7 @@ class _BelanjaScreenState extends ConsumerState<BelanjaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Belanjaan'),
+        title: const Text('Daftar Belanja 🛒'),
         actions: [
           IconButton(icon: const Icon(Icons.share), tooltip: 'Kirim ke WhatsApp', onPressed: _rows == null ? null : _share),
           IconButton(icon: const Icon(Icons.refresh), onPressed: _muat),

@@ -198,7 +198,7 @@ class _MasterScreenState extends ConsumerState<MasterScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Master'),
+          title: const Text('Kelola Menu & Bahan ⚙️'),
           bottom: const TabBar(tabs: [Tab(text: 'Bahan'), Tab(text: 'Menu'), Tab(text: 'HPP')]),
           actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _segarkan)],
         ),

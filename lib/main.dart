@@ -3,14 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/seed.dart';
 import 'providers.dart';
-import 'screens/belanja_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/kasbon_screen.dart';
 import 'screens/kasir_screen.dart';
-import 'screens/masuk_screen.dart';
-import 'screens/master_screen.dart';
-import 'screens/pengeluaran_screen.dart';
+import 'screens/lainnya_screen.dart';
 import 'screens/stok_screen.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const ProviderScope(child: WarkopApp()));
@@ -48,10 +46,8 @@ class _WarkopAppState extends ConsumerState<WarkopApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Warkop',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6F4E1F)),
-        useMaterial3: true,
-      ),
+      theme: temaWarkop(Brightness.light),
+      darkTheme: temaWarkop(Brightness.dark),
       // Key berubah setelah seed selesai -> layar query ulang, menu muncul.
       home: HomeNav(key: ValueKey(_boot), seedError: _seedError),
     );
@@ -70,46 +66,34 @@ class _HomeNavState extends State<HomeNav> {
   // Tab yang pernah dibuka — hanya itu yang dibangun (lazy).
   final Set<int> _dibuka = {0};
   static const _labels = [
-    'Laporan',
-    'Kasir',
+    'Beranda',
+    'Jual',
     'Stok',
-    'Belanja',
-    'Masuk',
-    'Keluar',
-    'Kasbon',
-    'Master',
+    'Bon',
+    'Lainnya',
   ];
   static const _icons = [
-    Icons.dashboard,
+    Icons.home,
     Icons.point_of_sale,
     Icons.inventory,
-    Icons.shopping_cart,
-    Icons.input,
-    Icons.money_off,
     Icons.book,
-    Icons.settings,
+    Icons.grid_view,
   ];
 
   Widget _page(int k) {
     // Placeholder murah untuk tab yang belum pernah dibuka.
     if (!_dibuka.contains(k)) return const SizedBox.shrink();
     switch (k) {
-      case 0:
-        return const DashboardScreen();
       case 1:
         return const KasirScreen();
       case 2:
         return const StokScreen();
       case 3:
-        return const BelanjaScreen();
-      case 4:
-        return const MasukScreen();
-      case 5:
-        return const PengeluaranScreen();
-      case 6:
         return const KasbonScreen();
+      case 4:
+        return const LainnyaScreen();
       default:
-        return const MasterScreen();
+        return const DashboardScreen();
     }
   }
 

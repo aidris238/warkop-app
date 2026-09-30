@@ -56,7 +56,7 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
   Widget build(BuildContext context) {
     final db = ref.watch(dbProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Barang Masuk')),
+      appBar: AppBar(title: const Text('Kulakan 📥')),
       body: FutureBuilder(
         key: ValueKey(_nonce),
         future: Future.wait([

@@ -49,7 +49,7 @@ class _PengeluaranScreenState extends ConsumerState<PengeluaranScreen> {
     final now = DateTime.now();
     final awal = DateTime(now.year, now.month, 1);
     return Scaffold(
-      appBar: AppBar(title: const Text('Pengeluaran')),
+      appBar: AppBar(title: const Text('Biaya 🧾')),
       body: FutureBuilder(
         key: ValueKey(_nonce),
         future: (db.select(db.expenses)..orderBy([(t) => OrderingTerm.desc(t.tanggal)])..limit(100)).get(),
