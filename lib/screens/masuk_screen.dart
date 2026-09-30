@@ -6,6 +6,7 @@ import '../data/database.dart';
 import '../data/repository.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 class _BarisMasuk {
   int? ingredientId;
@@ -56,7 +57,7 @@ class _MasukScreenState extends ConsumerState<MasukScreen> {
   Widget build(BuildContext context) {
     final db = ref.watch(dbProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Kulakan 📥')),
+      appBar: barWarkop('Kulakan'),
       body: FutureBuilder(
         key: ValueKey(_nonce),
         future: Future.wait([

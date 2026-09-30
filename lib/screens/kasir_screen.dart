@@ -6,6 +6,7 @@ import '../data/database.dart';
 import '../data/repository.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 // Kasir: ketuk menu = tambah 1. Bayar lewat panel bawah.
 class KasirScreen extends ConsumerStatefulWidget {
@@ -473,9 +474,9 @@ class _KasirScreenState extends ConsumerState<KasirScreen> {
   Widget build(BuildContext context) {
     final db = ref.watch(dbProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Jual ☕'),
-        actions: [
+      appBar: barWarkop(
+        'Jual',
+        aksi: [
           IconButton(
               icon: const Icon(Icons.hourglass_empty),
               tooltip: 'Pesanan yang ditahan',
@@ -581,8 +582,12 @@ class _KasirScreenState extends ConsumerState<KasirScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(_emoji('${m.kategori} ${m.nama}'),
-                                  style: const TextStyle(fontSize: 40)),
+                              FotoItem(
+                                path: m.fotoPath,
+                                emoji:
+                                    _emoji('${m.kategori} ${m.nama}'),
+                                ukuran: 64,
+                              ),
                               const SizedBox(height: 6),
                               Text(
                                 m.nama,

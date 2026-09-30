@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/database.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 // Stok: yang menipis di atas, aman di bawah. Ketuk = riwayat + betulkan.
 class StokScreen extends ConsumerStatefulWidget {
@@ -184,9 +185,9 @@ class _StokScreenState extends ConsumerState<StokScreen> {
     final db = ref.watch(dbProvider);
     final repo = ref.watch(repoProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stok 📦'),
-        actions: [
+      appBar: barWarkop(
+        'Stok',
+        aksi: [
           IconButton(
               icon: const Icon(Icons.refresh),
               tooltip: 'Muat ulang',
@@ -290,17 +291,7 @@ class _StokScreenState extends ConsumerState<StokScreen> {
       child: ListTile(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        leading: Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: warna.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Center(
-              child: Text(habis ? '🔴' : kritis ? '🟡' : '🟢',
-                  style: const TextStyle(fontSize: 26))),
-        ),
+        leading: FotoItem(path: ing.fotoPath, emoji: habis ? '🔴' : kritis ? '🟡' : '🟢'),
         title: Text(ing.nama,
             style:
                 const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

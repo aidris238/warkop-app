@@ -7,6 +7,7 @@ import '../data/database.dart';
 import '../data/repository.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 class _Baris {
   final Ingredient ing;
@@ -113,9 +114,9 @@ class _BelanjaScreenState extends ConsumerState<BelanjaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftar Belanja 🛒'),
-        actions: [
+      appBar: barWarkop(
+        'Daftar Belanja',
+        aksi: [
           IconButton(icon: const Icon(Icons.share), tooltip: 'Kirim ke WhatsApp', onPressed: _rows == null ? null : _share),
           IconButton(icon: const Icon(Icons.refresh), onPressed: _muat),
         ],

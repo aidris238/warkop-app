@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/repository.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 // Beranda: sapaan + kartu untung hari ini + jalan pintas + menu laris.
 // Bahasa dibuat awam: "Omzet" -> "Uang masuk", dst.
@@ -102,9 +103,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ? 'Selamat sore'
                 : 'Selamat malam';
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('☕ Warkop Saya'),
-        actions: [
+      appBar: barWarkop(
+        'Warkop Saya',
+        aksi: [
           IconButton(
               icon: const Icon(Icons.lock_outline),
               tooltip: 'Atur PIN',

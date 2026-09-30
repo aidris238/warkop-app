@@ -18,6 +18,7 @@ class Ingredients extends Table {
   RealColumn get stokTarget => real().withDefault(const Constant(0))();
   IntColumn get hargaTerakhir => integer().withDefault(const Constant(0))();
   IntColumn get hargaRata2 => integer().withDefault(const Constant(0))();
+  TextColumn get fotoPath => text().nullable()();
   BoolColumn get aktif => boolean().withDefault(const Constant(true))();
 }
 
@@ -36,6 +37,7 @@ class Products extends Table {
   // 'resep' = kurangi beberapa bahan, 'langsung' = 1:1 ke satu bahan
   TextColumn get tipe => text().withDefault(const Constant('resep'))();
   IntColumn get ingredientId => integer().nullable().references(Ingredients, #id)();
+  TextColumn get fotoPath => text().nullable()();
   BoolColumn get aktif => boolean().withDefault(const Constant(true))();
 }
 
@@ -170,7 +172,18 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          // v1 -> v2: tambah kolom foto di bahan & menu (nullable, aman).
+          if (from < 2) {
+            await m.addColumn(ingredients, ingredients.fotoPath);
+            await m.addColumn(products, products.fotoPath);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

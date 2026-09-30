@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import '../data/database.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 // Bon: siapa yang utang, berapa, lunasin, ingatkan WA.
 class KasbonScreen extends ConsumerStatefulWidget {
@@ -216,7 +217,7 @@ class _KasbonState extends ConsumerState<KasbonScreen> {
   Widget build(BuildContext context) {
     final db = ref.watch(dbProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Bon 📒')),
+      appBar: barWarkop('Bon'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _tambah,
         icon: const Icon(Icons.person_add),

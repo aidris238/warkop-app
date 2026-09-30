@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/logo_header.dart';
 import 'belanja_screen.dart';
 import 'masuk_screen.dart';
 import 'master_screen.dart';
@@ -12,7 +13,7 @@ class LainnyaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lainnya 📋')),
+      appBar: barWarkop('Lainnya'),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

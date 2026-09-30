@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/database.dart';
 import '../providers.dart';
 import '../utils/format.dart';
+import '../widgets/logo_header.dart';
 
 const _kategoris = ['Listrik', 'Air', 'Sewa', 'Gaji', 'Iuran', 'Perbaikan', 'Lainnya'];
 
@@ -49,7 +50,7 @@ class _PengeluaranScreenState extends ConsumerState<PengeluaranScreen> {
     final now = DateTime.now();
     final awal = DateTime(now.year, now.month, 1);
     return Scaffold(
-      appBar: AppBar(title: const Text('Biaya 🧾')),
+      appBar: barWarkop('Biaya'),
       body: FutureBuilder(
         key: ValueKey(_nonce),
         future: (db.select(db.expenses)..orderBy([(t) => OrderingTerm.desc(t.tanggal)])..limit(100)).get(),
