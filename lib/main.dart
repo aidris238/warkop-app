@@ -57,16 +57,8 @@ class HomeNav extends StatefulWidget {
 
 class _HomeNavState extends State<HomeNav> {
   int _i = 0;
-  static const _pages = [
-    DashboardScreen(),
-    KasirScreen(),
-    StokScreen(),
-    BelanjaScreen(),
-    MasukScreen(),
-    PengeluaranScreen(),
-    KasbonScreen(),
-    MasterScreen(),
-  ];
+  // Tab yang pernah dibuka — hanya itu yang dibangun (lazy).
+  final Set<int> _dibuka = {0};
   static const _labels = [
     'Laporan',
     'Kasir',
@@ -88,15 +80,44 @@ class _HomeNavState extends State<HomeNav> {
     Icons.settings,
   ];
 
+  Widget _page(int k) {
+    // Placeholder murah untuk tab yang belum pernah dibuka.
+    if (!_dibuka.contains(k)) return const SizedBox.shrink();
+    switch (k) {
+      case 0:
+        return const DashboardScreen();
+      case 1:
+        return const KasirScreen();
+      case 2:
+        return const StokScreen();
+      case 3:
+        return const BelanjaScreen();
+      case 4:
+        return const MasukScreen();
+      case 5:
+        return const PengeluaranScreen();
+      case 6:
+        return const KasbonScreen();
+      default:
+        return const MasterScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _i, children: _pages),
+      body: IndexedStack(
+        index: _i,
+        children: [for (var k = 0; k < _labels.length; k++) _page(k)],
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _i,
-        onDestinationSelected: (v) => setState(() => _i = v),
+        onDestinationSelected: (v) => setState(() {
+          _i = v;
+          _dibuka.add(v);
+        }),
         destinations: [
-          for (var k = 0; k < _pages.length; k++)
+          for (var k = 0; k < _labels.length; k++)
             NavigationDestination(
                 icon: Icon(_icons[k]), label: _labels[k]),
         ],

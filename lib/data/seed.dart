@@ -8,7 +8,8 @@ Future<void> seedAwal(AppDatabase db) async {
   final ada =
       await (db.select(db.ingredients)..limit(1)).getSingleOrNull();
   if (ada != null) return;
-
+  // Satu transaksi: jauh lebih cepat daripada puluhan tulis terpisah.
+  await db.transaction(() async {
   final bahan = <Map<String, Object>>[
     {'nama': 'Kopi bubuk', 'kategori': 'Minuman', 'satuan': 'gram', 'min': 500.0, 'target': 2000.0, 'harga': 120},
     {'nama': 'Gula pasir', 'kategori': 'Minuman', 'satuan': 'gram', 'min': 1000.0, 'target': 5000.0, 'harga': 18},
@@ -97,4 +98,5 @@ Future<void> seedAwal(AppDatabase db) async {
         tipe: Value('langsung'),
         ingredientId: Value(ids['Rokok ketengan']!),
       ));
+  }); // transaction
 }

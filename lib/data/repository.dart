@@ -381,41 +381,47 @@ class WarkopRepository {
 
   // ---------- dashboard & laporan (FR-8) ----------
   Future<DashboardData> dashboard(DateTime start, DateTime end) async {
+    // Semua query di level DB; join sekali jalan, tanpa N+1.
     final sales = await (db.select(db.sales)
-          ..where((t) => t.status.equals('lunas')))
+          ..where((t) =>
+              t.status.equals('lunas') &
+              t.waktu.isBiggerOrEqualValue(start) &
+              t.waktu.isSmallerThanValue(end)))
         .get();
-    final period = sales
-        .where((s) => !s.waktu.isBefore(start) && s.waktu.isBefore(end))
-        .toList();
+    final ids = sales.map((s) => s.id).toList();
+    final items = ids.isEmpty
+        ? <SaleItem>[]
+        : await (db.select(db.saleItems)
+              ..where((t) => t.saleId.isIn(ids)))
+            .get();
+    final prods = await db.select(db.products).get();
+    final nama = {for (final p in prods) p.id: p.nama};
     var omzet = 0;
     var hpp = 0;
     final perMenu = <String, int>{};
-    for (final s in period) {
+    for (final s in sales) {
       omzet += s.total;
-      final items = await (db.select(db.saleItems)
-            ..where((t) => t.saleId.equals(s.id)))
-          .get();
-      for (final it in items) {
-        hpp += it.hpp * it.qty;
-        final p = await (db.select(db.products)
-              ..where((t) => t.id.equals(it.productId)))
-            .getSingleOrNull();
-        if (p != null) perMenu[p.nama] = (perMenu[p.nama] ?? 0) + it.qty;
-      }
     }
-    final exps = await db.select(db.expenses).get();
+    for (final it in items) {
+      hpp += it.hpp * it.qty;
+      final n = nama[it.productId];
+      if (n != null) perMenu[n] = (perMenu[n] ?? 0) + it.qty;
+    }
+    final exps = await (db.select(db.expenses)
+          ..where((t) =>
+              t.tanggal.isBiggerOrEqualValue(start) &
+              t.tanggal.isSmallerThanValue(end)))
+        .get();
     var pengeluaran = 0;
     for (final e in exps) {
-      if (!e.tanggal.isBefore(start) && e.tanggal.isBefore(end)) {
-        pengeluaran += e.nominal;
-      }
+      pengeluaran += e.nominal;
     }
     final terlaris = perMenu.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     return DashboardData(
       omzet: omzet,
       hpp: hpp,
-      transaksi: period.length,
+      transaksi: sales.length,
       pengeluaran: pengeluaran,
       terlaris: terlaris.take(5).toList(),
     );
