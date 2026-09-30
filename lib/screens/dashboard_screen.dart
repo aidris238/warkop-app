@@ -281,7 +281,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: [
           Text(
             kosong
-                ? 'Untung bersih $_periodeLabel'
+                ? 'Untung bersih ${_periodeLabel()}'
                 : 'Untung bersih • ${_periode.toLowerCase()}',
             style: const TextStyle(color: Colors.white70, fontSize: 14),
           ),
